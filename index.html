@@ -92,7 +92,7 @@
           triedNames.push(fullName);
           localStorage.setItem('triedNames', JSON.stringify(triedNames));
 
-          const win = Math.random() < 0.15;
+          const win = Math.random() < 0.1;
           const result = win ? 'Congratulations! You won a prize!' : 'Sorry, no prize this time.';
           prizeResultInput.value = result;
           resultMessage.textContent = result;
