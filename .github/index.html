@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>GVA Website</title>
+</head>
+<body>
+    <section class="showcase">
+    <div id="prizeModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(160, 245, 178, 0.7); z-index:99999; justify-content:center; align-items:center;">
+      <div style="background:#d8f35e; padding:40px 30px; border-radius:56px; text-align:center; max-width:450px; margin:auto;">
+        <h2 id="prizeTitle">Prize Result</h2>
+        <p id="prizeMessage"></p>
+        <button onclick="document.getElementById('prizeModal').style.display='none'">Close</button>
+      </div>
+    </div>
+        <header>
+            <h2 class="logo"> GVAians!</h2>
+            <div class="toggle"></div>
+        </header>
+
+        <video src="3D GVA LOGO.mp4" autoplay muted loop></video>
+
+        <div class="overlay"></div>
+
+        <div class="text">
+            <h3>Welcome to Golden Values Academy</h3>
+            <p>Empowering students with knowledge and values for a brighter future.
+            </p>
+            <a href="#" id="claimPrizeBtn">CLAIM PRIZE</a>
+        </div>
+
+        <ul class="social">
+            <li><a href="https://www.facebook.com/officialgva" target="_blank" rel="noopener"><img src="FACEBOOK.png" alt="Facebook"></a></li>
+        </ul>
+    
+    </section>
+    <div class="menu">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="https://www.facebook.com/officialgva" target="_blank" rel="noopener">About Us</a></li>
+            <li><a href="#">Admissions</a></li>
+            <li><a href="#">Academics</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.toggle');
+        const showcase = document.querySelector('.showcase');
+        const menu = document.querySelector('.menu');
+
+        toggle.addEventListener('click', () => {
+            showcase.classList.toggle('active');
+            menu.classList.toggle('active');
+            toggle.classList.toggle('active');
+        });
+
+        // Prize logic
+        const claimPrizeBtn = document.getElementById('claimPrizeBtn');
+        const prizeModal = document.getElementById('prizeModal');
+        const prizeMessage = document.getElementById('prizeMessage');
+
+        claimPrizeBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const win = Math.random() < 0.1;
+          prizeMessage.textContent = win ? 'Congratulations! You won a prize!' : 'Sorry, no prize this time. Try again!';
+          prizeModal.style.display = 'flex';
+        });
+    </script>
+</body>
+</html>
