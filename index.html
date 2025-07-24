@@ -7,13 +7,20 @@
     <title>GVA Website</title>
 </head>
 <body>
+    <audio src="GVA Hymn.mp3" autoplay loop hidden></audio>
     <section class="showcase">
-    <div id="prizeModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(160, 245, 178, 0.7); z-index:99999; justify-content:center; align-items:center;">
-      <div style="background:#d8f35e; padding:40px 30px; border-radius:56px; text-align:center; max-width:450px; margin:auto;">
-        <h2 id="prizeTitle">Prize Result</h2>
-        <p id="prizeMessage"></p>
-        <button onclick="document.getElementById('prizeModal').style.display='none'">Close</button>
-      </div>
+    <div id="registerModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(160,245,178,0.7); z-index:99999; justify-content:center; align-items:center;">
+  <div style="background:#fff; padding:40px 30px; border-radius:24px; text-align:center; max-width:350px; margin:auto;">
+    <h2>Register to Claim Prize</h2>
+    <form id="prizeForm" target="_blank">
+      <input type="text" id="fullName" name="fullName" placeholder="Full Name" required style="width:90%;padding:8px;margin-bottom:16px;">
+      <input type="hidden" id="prizeResult" name="prizeResult">
+      <button type="submit" style="padding:8px 24px;">Submit & Claim Prize</button>
+    </form>
+    <div id="resultMessage" style="margin-top:16px;"></div>
+    <button id="closeModalBtn" style="margin-top:16px; display:none;">Close</button>
+  </div>
+</div>
     </div>
         <header>
             <h2 class="logo"> GVAians!</h2>
@@ -59,14 +66,51 @@
 
         // Prize logic
         const claimPrizeBtn = document.getElementById('claimPrizeBtn');
-        const prizeModal = document.getElementById('prizeModal');
-        const prizeMessage = document.getElementById('prizeMessage');
+        const registerModal = document.getElementById('registerModal');
+        const prizeForm = document.getElementById('prizeForm');
+        const prizeResultInput = document.getElementById('prizeResult');
+        const resultMessage = document.getElementById('resultMessage');
+        const closeModalBtn = document.getElementById('closeModalBtn');
 
         claimPrizeBtn.addEventListener('click', function(e) {
           e.preventDefault();
-          const win = Math.random() < 0.1;
-          prizeMessage.textContent = win ? 'Congratulations! You won a prize!' : 'Sorry, no prize this time. Try again!';
-          prizeModal.style.display = 'flex';
+          registerModal.style.display = 'flex';
+          resultMessage.textContent = '';
+        });
+
+        prizeForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const fullName = prizeForm.fullName.value.trim().toLowerCase();
+          let triedNames = JSON.parse(localStorage.getItem('triedNames') || '[]');
+
+          if (triedNames.includes(fullName)) {
+            resultMessage.textContent = 'This name has already tried to claim the prize.';
+            closeModalBtn.style.display = 'inline-block';
+            return;
+          }
+
+          triedNames.push(fullName);
+          localStorage.setItem('triedNames', JSON.stringify(triedNames));
+
+          const win = Math.random() < 0.15;
+          const result = win ? 'Congratulations! You won a prize!' : 'Sorry, no prize this time.';
+          prizeResultInput.value = result;
+          resultMessage.textContent = result;
+          closeModalBtn.style.display = 'inline-block';
+
+          fetch('https://docs.google.com/forms/d/e/1FAIpQLSdtJfGQJI1kNuulnv28Pz8h1Isc5SZbAcbzuBeCCH8omdP0SA/formResponse', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `entry.2114347832=${encodeURIComponent(prizeForm.fullName.value)}&entry.1503981408=${encodeURIComponent(result)}`
+          });
+        });
+
+        closeModalBtn.addEventListener('click', function() {
+          registerModal.style.display = 'none';
+          closeModalBtn.style.display = 'none';
+          resultMessage.textContent = '';
+          prizeForm.reset();
         });
     </script> src="dist/index.js"></script>
 </body>
